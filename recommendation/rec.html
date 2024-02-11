@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Recommendations</title>
+
+  <style>
+
+body {
+  background: url('recommendation.jpg') no-repeat center center fixed; 
+  background-size: cover;
+  height: 100%;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+#recommendations {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.recommendation {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+form {
+  display: flex;
+  flex-direction: column;
+}
+button {
+  text-align: center;
+  size: 50px;
+  background-color: red;
+  font-size: medium;
+  font-weight: bold;
+}
+
+
+input[type=text], select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type=submit] {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Health Recommendations</h1>
+    <form id="healthForm">
+      <label for="age" style="font-weight: bold;">Enter your age:</label>
+      <input type="number" id="age" min="0" required><br><br>
+      <label for="disease" style="font-weight: bold;">Select any diseases you have:</label>
+      <select id="disease" multiple>
+        <option value="diabetes">Diabetes</option>
+        <option value="hypertension">Hypertension</option>
+        <option value="heart-disease">Heart Disease</option>
+        <!-- Add more options -->
+      </select><br><br>
+      <button type="submit">Get Recommendations</button>
+    </form>
+    
+    <div id="recommendations">
+      <!-- Recommendations -->
+    </div>
+  </div>
+
+  <script>
+
+document.addEventListener("DOMContentLoaded", function() {
+  const healthForm = document.getElementById("healthForm");
+  const recommendationsContainer = document.getElementById("recommendations");
+
+  healthForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const age = parseInt(document.getElementById("age").value);
+    const diseases = Array.from(document.getElementById("disease").selectedOptions).map(option => option.value);
+
+    const recommendations = generateRecommendations(age, diseases);
+    displayRecommendations(recommendations);
+  });
+
+  function generateRecommendations(age, diseases) {
+    let recommendations = [];
+
+    // Diet recommendation
+    if (age <= 30) {
+      recommendations.push("Diet recommendation for age below 30: Eat a balanced diet rich in fruits, vegetables, whole grains, and lean proteins.");
+    } else {
+      recommendations.push("Diet recommendation for age 30 and above: Focus on maintaining a healthy weight, and consider incorporating more fiber and calcium-rich foods into your diet.");
+    }
+
+    // Sleeping time recommendation based on age
+    if (age <= 18) {
+      recommendations.push("Recommended sleeping time for age below 18: Aim for 8-10 hours of sleep per night for optimal growth and development.");
+    } else {
+      recommendations.push("Recommended sleeping time for age 18 and above: Aim for 7-9 hours of sleep per night to support overall health and well-being.");
+    }
+
+    // Exercise recommendation based on age and diseases
+    if (age <= 50) {
+      recommendations.push("Exercise recommendation for age below 50: Engage in at least 150 minutes of moderate-intensity aerobic activity or 75 minutes of vigorous-intensity aerobic activity per week, along with muscle-strengthening exercises on two or more days a week.");
+    } else {
+      recommendations.push("Exercise recommendation for age 50 and above: Focus on maintaining mobility and flexibility with activities like walking, swimming, or yoga, and include strength training exercises to preserve muscle mass and bone density.");
+    }
+
+    // Doctor appointment recommendation based on age and diseases
+    const today = new Date();
+    const nextAppointment = new Date();
+    nextAppointment.setFullYear(today.getFullYear() + Math.floor(age / 10) * 2); // Schedule appointment every 2 years starting from age 0-9
+
+    recommendations.push(`Next doctor appointment recommendation: Schedule an appointment with your healthcare provider for a routine check-up by ${nextAppointment.toDateString()}.`);
+
+    return recommendations;
+  }
+
+  function displayRecommendations(recommendations) {
+    recommendationsContainer.innerHTML = "";
+    recommendations.forEach(recommendation => {
+      const recommendationDiv = document.createElement("div");
+      recommendationDiv.classList.add("recommendation");
+      recommendationDiv.textContent = recommendation;
+      recommendationsContainer.appendChild(recommendationDiv);
+    });
+  }
+});
+
+  </script>
+</body>
+</html>
